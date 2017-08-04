@@ -17,7 +17,7 @@ const server = oauth2orize.createServer();
 server.exchange(oauth2orize.exchange.clientCredentials((client,scope ,req ,done) => {
     const token = utils.uid(256)
     const tokenHash = crypto.createHash('sha1').update(token).digest('hex')
-    const expiresIn = 1800
+    const expiresIn = 180000
     const expirationDate = new Date(new Date().getTime() + (expiresIn * 1000));
     User.findOne({'email': req.email}, function (err, user) {
         if (err) {
