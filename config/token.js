@@ -13,6 +13,9 @@ import { UserNotFoundError, WrongPassword } from './errors'
 // create OAuth 2.0 server
 const server = oauth2orize.createServer();
 
+// Create middleware funcion pass name model and options-> find ket, return name model
+//afater create daefault search middleare
+// inactive when user say
 //Client Credentials --> cambiar por password credentials
 server.exchange(oauth2orize.exchange.clientCredentials((client,scope ,req ,done) => {
     const token = utils.uid(256)
@@ -39,8 +42,7 @@ server.exchange(oauth2orize.exchange.clientCredentials((client,scope ,req ,done)
             return done(null, token, {expires_in: expiresIn, user})
         });
     });
-}))
-
+}));
 
 // token endpoint
 exports.token = [
