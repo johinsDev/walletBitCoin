@@ -100,7 +100,7 @@ function BadRequestError(message) {
   Error.call(this);
   this.code = 'Validation error';
   this.name = 'BadRequestError';
-  this.message = message;
+  this.data = message;
   this.status = 400;
 }
 

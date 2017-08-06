@@ -1,5 +1,6 @@
 import UserTransforer from '../transformers/UserTransformer';
 import HTTPStatus from 'http-status';
+import { BadRequestError } from '../../config/errors';
 
 const signUp = (req, res, next) => {
 }
@@ -20,7 +21,7 @@ const update = async (req, res) => {
         
         return res.status(HTTPStatus.OK).json(user.toJSON());
     } catch (e) {
-        return res.status(HTTPStatus.BAD_REQUEST).json(e);
+        return res.status(HTTPStatus.BAD_REQUEST).json(new BadRequestError(e));
     }
 }
 
