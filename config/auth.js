@@ -12,7 +12,7 @@ import { ExpiredToken, NotToken } from './errors'
 
 passport.use('clientPassword', new ClientPasswordStrategy(
   function(clientId, clientSecret, done) {
-    Client.findOne({ client_id: clientId }, function (err, client) {  
+    Client.findOne({ client_id: clientId }, function (err, client) {
       if (err) { return done(err); }
       if (!client) { return done(null, false); }
       if (client.client_secret != clientSecret) { return done(null, false); }

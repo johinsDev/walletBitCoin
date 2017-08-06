@@ -1,3 +1,4 @@
+"use strict";
 /**
  * `UserNotFoundError` error.
  *
@@ -95,6 +96,18 @@ function NotToken(message, code, uri, status) {
  */
 EmailError.prototype.__proto__ = Error.prototype;
 
+function BadRequestError(message) {
+  Error.call(this);
+  this.code = 'Validation error';
+  this.name = 'BadRequestError';
+  this.message = message;
+  this.status = 400;
+}
+
+/**
+ * Inherit from `Error`.
+ */
+BadRequestError.prototype.__proto__ = Error.prototype;
 
 /**
  * Expose Errors.
@@ -104,5 +117,6 @@ module.exports = {
     UserNotFoundError,
     WrongPassword,
     ExpiredToken,
-    NotToken
+    NotToken,
+    BadRequestError
  };

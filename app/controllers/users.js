@@ -1,4 +1,5 @@
 import UserTransforer from '../transformers/UserTransformer';
+import HTTPStatus from 'http-status';
 
 const signUp = (req, res, next) => {
 }
@@ -12,9 +13,16 @@ const profile = (req, res) => {
   return res.send(UserTransforer(req.user))
 }
 
-const update = (req, res) => {
-    const user = req.user.update(req.body);
-    res.send(UserTransforer(user));
+const update = async (req, res) => {
+    console.log(req);
+    try {
+        const user = req.user;
+        await user.update(req);
+        
+        return res.status(HTTPStatus.OK).send(user.toJSON());
+    } catch (e) {
+        return res.status(HTTPStatus.BAD_REQUEST).json(e);
+    }
 }
 
 module.exports = {
