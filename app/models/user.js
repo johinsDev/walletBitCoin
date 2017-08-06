@@ -57,19 +57,22 @@ userSchema.methods.update = function(req) {
 	});
 	return this.save();
 };
+
 userSchema.methods.getTotalWallets = function(data) {
 	return (this.wallets.length || 0);
 };
 
 userSchema.methods.toJSON = function() {
     return {
-      _id: this._id,
-	  name: this.name,
-      userName: this.username,
-	  firstName: this.firstName,
-	  lastName: this.lastName,
-	  avatar: this.avatar,
-	  wallets: this.wallets
+      data: {
+		  _id: this._id,
+		name: this.name,
+		userName: this.username,
+		firstName: this.firstName,
+		lastName: this.lastName,
+		avatar: this.avatar,
+		wallets: this.wallets
+	  }
     };
   },
 

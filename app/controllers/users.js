@@ -10,16 +10,15 @@ const signIn = (req, res) => {
 
 
 const profile = (req, res) => {
-  return res.send(UserTransforer(req.user))
+  return res.status(HTTPStatus.OK).json(req.user.toJSON());
 }
 
 const update = async (req, res) => {
-    console.log(req);
     try {
         const user = req.user;
         await user.update(req);
         
-        return res.status(HTTPStatus.OK).send(user.toJSON());
+        return res.status(HTTPStatus.OK).json(user.toJSON());
     } catch (e) {
         return res.status(HTTPStatus.BAD_REQUEST).json(e);
     }
