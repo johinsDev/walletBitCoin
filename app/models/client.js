@@ -14,4 +14,4 @@ const clientSchema = new Schema({
 });
 
 clientSchema.plugin(autoIncrement, {inc_field: 'client_id'})
-export default mongoose.model('clients', clientSchema);
+export default mongoose.model('Client', clientSchema);

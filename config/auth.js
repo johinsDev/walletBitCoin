@@ -37,7 +37,7 @@ passport.use("accessToken", new BearerStrategy(
                     if (!user) return done(null, false)
                     var info = { scope: '*' }
                     done(null, user, info);
-                })
+                }).populate('_wallets')
             }
         })
     }

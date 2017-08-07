@@ -36,7 +36,7 @@ const userSchema = new Schema(
 		password: { type: String, set: encryptPassword, hideJSON: true },
 		phone: String,
 		avatar: String,
-		wallets : [{ type: Schema.Types.ObjectId, ref: 'wallets' }]
+		_wallets : [{ type: Schema.Types.ObjectId, ref: 'Wallet' }]
 	},
 	{ timestamps: true },
 );
@@ -58,9 +58,25 @@ userSchema.methods.update = function(req) {
 	return this.save();
 };
 
-userSchema.methods.getTotalWallets = function(data) {
-	return (this.wallets.length || 0);
+userSchema.methods.getTotalWallets = function() {
+	console.log(this._wallets.data);
+	return (this._wallets.length || 0);
 };
+
+
+userSchema.methods.walletToJSON = function(wallet) {
+	return {
+		id: wallet._id,
+		label: wallet.label,
+		network: wallet.network,
+		address: wallet.address,
+		balance: wallet.balance
+	}
+};
+
+userSchema.methods.walletsToJSON = function() {
+	return this._wallets.map(wallet => this.walletToJSON(wallet))
+  };
 
 userSchema.methods.toJSON = function() {
     return {
@@ -71,7 +87,7 @@ userSchema.methods.toJSON = function() {
 		firstName: this.firstName,
 		lastName: this.lastName,
 		avatar: this.avatar,
-		wallets: this.wallets
+		wallets: this.walletsToJSON()
 	  }
     };
   },
@@ -79,7 +95,7 @@ userSchema.methods.toJSON = function() {
 userSchema.methods.createWallet = function createWallet(wallet, cb) {
 	wallet.user = this._id;
 	Wallet.create(wallet, (err, res) => {
-		 this.wallets.push(res);
+		 this._wallets.push(res);
 		 this.save();
 		 return cb(err, res);
 	});
@@ -89,4 +105,4 @@ userSchema.statics.all = function(cb){
     return this.find({}, cb);
 }
 
-export default mongoose.model('users', userSchema);
+export default mongoose.model('User', userSchema);

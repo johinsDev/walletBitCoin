@@ -6,9 +6,21 @@ const walletSchema = new Schema({
 	network: String,
 	user_id: Number,
 	address: String,
-	label: String
+	label: String,
+	balance:  {
+      type: Number,
+      default: 0,
+    },
 });
 
 walletSchema.plugin(mongooseHidden)
 
-export default mongoose.model('wallets', walletSchema);
+walletSchema.methods.toJSON = function(){
+	return {
+      data: {
+		  _id: this._id
+	  }
+    };
+};
+
+export default mongoose.model('Wallet', walletSchema);

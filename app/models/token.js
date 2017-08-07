@@ -8,4 +8,4 @@ const tokenSchema = new Schema({
     expirationDate: Date
 });
 
-export default mongoose.model('oauth_access_tokens', tokenSchema);
+export default mongoose.model('oauthAccessToken', tokenSchema);
