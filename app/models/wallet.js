@@ -18,7 +18,8 @@ walletSchema.plugin(mongooseHidden)
 walletSchema.methods.toJSON = function(){
 	return {
       data: {
-		  _id: this._id
+		  _id: this._id,
+		  balance: this.balance
 	  }
     };
 };

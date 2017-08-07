@@ -59,8 +59,7 @@ userSchema.methods.update = function(req) {
 };
 
 userSchema.methods.getTotalWallets = function() {
-	console.log(this._wallets.data);
-	return (this._wallets.length || 0);
+	return this._wallets.length || 0;
 };
 
 

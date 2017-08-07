@@ -20,7 +20,7 @@ const update = async (req, res) => {
         const user = req.user;
         await user.update(req);
         
-        return res.status(HTTPStatus.OK).json(user.toJSON());
+        return res.status(HTTPStatus.BAD_REQUEST).json(new BadRequestError(e));
     } catch (e) {
         return res.status(HTTPStatus.BAD_REQUEST).json(new BadRequestError(e));
     }
