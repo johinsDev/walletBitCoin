@@ -8,7 +8,7 @@ import utils from './utils';
 import { UserNotFoundError, WrongPassword, EmailError, BadRequestError } from './errors'
 import BlockIo from 'block_io';
 import HTTPStatus from 'http-status';
-const block_io = new BlockIo('25ae-b1f8-9579-a4f2','17931793', 2);
+const block_io = new BlockIo('1574-5f7a-611e-ad39','maleja280516', 2);
 
 const server = oauth2orize.createServer();
 

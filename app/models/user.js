@@ -62,35 +62,24 @@ userSchema.methods.getTotalWallets = function() {
 	return this._wallets.length || 0;
 };
 
-
-userSchema.methods.walletToJSON = function(wallet) {
-	return {
-		id: wallet._id,
-		label: wallet.label,
-		network: wallet.network,
-		address: wallet.address,
-		balance: wallet.balance
-	}
-};
-
 userSchema.methods.walletsToJSON = function() {
-	return this._wallets.map(wallet => this.walletToJSON(wallet))
+	return this._wallets.map(wallet => wallet.toJSON())
   };
 
 userSchema.methods.toJSON = function() {
     return {
       data: {
-		  _id: this._id,
+			_id: this._id,
 		name: this.name,
 		userName: this.username,
 		firstName: this.firstName,
 		lastName: this.lastName,
 		avatar: this.avatar,
-		wallets: this.walletsToJSON()
-	  }
+		wallets: {data: this.walletsToJSON()}
+	 }
     };
   },
-
+	
 userSchema.methods.createWallet = function createWallet(wallet, cb) {
 	wallet.user = this._id;
 	Wallet.create(wallet, (err, res) => {

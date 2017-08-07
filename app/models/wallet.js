@@ -4,7 +4,7 @@ let mongooseHidden = require('mongoose-hidden')()
 
 const walletSchema = new Schema({
 	network: String,
-	user_id: Number,
+	user: { type: Schema.Types.ObjectId, ref: 'User' },
 	address: String,
 	label: String,
 	balance:  {
@@ -17,10 +17,9 @@ walletSchema.plugin(mongooseHidden)
 
 walletSchema.methods.toJSON = function(){
 	return {
-      data: {
-		  _id: this._id,
-		  balance: this.balance
-	  }
+       	_id: this._id,
+		balance: this.balance,
+		label: this.label
     };
 };
 

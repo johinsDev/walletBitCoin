@@ -110,6 +110,25 @@ function BadRequestError(message) {
 BadRequestError.prototype.__proto__ = Error.prototype;
 
 /**
+ * `NotFoundError` error.
+ *
+ * @api public
+ */
+ 
+function NotFoundError(message, code, model) {
+  if (!typeof code === 'number'){
+    code = model;
+  }
+  Error.call(this);
+  this.message = message;
+  this.code = `not_found_${code}`;
+}
+
+/**
+ * Inherit from `Error`.
+ */
+NotFoundError.prototype.__proto__ = Error.prototype;
+/**
  * Expose Errors.
  */
 module.exports = {
@@ -118,5 +137,6 @@ module.exports = {
     WrongPassword,
     ExpiredToken,
     NotToken,
-    BadRequestError
+    BadRequestError,
+    NotFoundError
  };

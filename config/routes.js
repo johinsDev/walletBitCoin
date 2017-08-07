@@ -22,8 +22,8 @@ export default function (app, passport) {
 
         //WALLETS
         app.post('wallet',[passport.authenticate(['accessToken'], { session: false }), haveManyWallets ], wallets.create);
-        app.get('wallet', passport.authenticate(['accessToken'], { session: false }), wallets.show);
+        app.get('wallet/:id', passport.authenticate(['accessToken'], { session: false }), wallets.show);
         app.put('wallet', passport.authenticate(['accessToken'], { session: false }), wallets.update);
-        app.delete('wallet', passport.authenticate(['accessToken'], { session: false }), wallets.destroy);
+        app.get('wallets', passport.authenticate(['accessToken'], { session: false }), wallets.get);
     });
 }
