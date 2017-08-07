@@ -2,13 +2,16 @@
 import passport from 'passport';
 import AccessToken from '../app/models/token';
 import User from '../app/models/user';
+import Wallet from '../app/models/wallet';
 import crypto from 'crypto';
 import oauth2orize from 'oauth2orize';
 import utils from './utils';
 import { UserNotFoundError, WrongPassword, EmailError, BadRequestError } from './errors'
-import BlockIo from 'block_io';
 import HTTPStatus from 'http-status';
-const block_io = new BlockIo('1574-5f7a-611e-ad39','maleja280516', 2);
+
+import BlockIo from '../app/models/blockIo';
+const blockIo = new BlockIo()
+
 
 const server = oauth2orize.createServer();
 
@@ -17,21 +20,30 @@ server.exchange(oauth2orize.exchange.clientCredentials((client,scope ,req ,done)
     const tokenHash = crypto.createHash('sha1').update(token).digest('hex')
     const expiresIn = 180000
     const expirationDate = new Date(new Date().getTime() + (expiresIn * 1000));
-    User.create(req,(err, result) => {
+    User.create(req,(err, user) => {
         if (err) {
             return done(new BadRequestError(err));
         }
-        block_io.get_new_address({'label': `${result._id}`}, (err, data) => {
-            result.createWallet(data.data, (err, wallet) => {
-                AccessToken.create({
-                    token: tokenHash,
-                    user: result,
-                    expirationDate: expirationDate, 
-                    client: client
-                }, (err) => {
-                    if (err) return done(new Error(err))
-                    return done(null, token, {expires_in: expiresIn, result})
-                });
+        const wallet = new Wallet();
+        blockIo.get_new_address({'label': `${wallet._id}`}, (err, address) => {
+             if (address.status == 'fail'){
+                return done(new BadRequestError(data));
+            }
+            wallet.label = address.data.label;
+            wallet.network = address.data.network;
+            wallet.address = address.data.address;
+            wallet.user = req.user;
+            wallet.save();
+            user._wallets.push(wallet);
+            user.save();
+             AccessToken.create({
+                token: tokenHash,
+                user: user,
+                expirationDate: expirationDate, 
+                client: client
+            }, (err) => {
+                if (err) return done(new Error(err))
+                return done(null, token, {expires_in: expiresIn, user})
             });
         });
     });

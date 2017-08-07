@@ -1,30 +1,34 @@
 import Wallet from '../models/wallet';
+import BlockIo from '../models/blockIo';
 import HTTPStatus from 'http-status';
 import { NotFoundError } from '../../config/errors';
-
-import BlockIo from 'block_io';
-const block_io = new BlockIo('1574-5f7a-611e-ad39','maleja280516', 2);
+const blockIo = new BlockIo()
 
 const create = (req, res, next) => {
-    block_io.get_new_address({'label': `${req.user._id}_${req.user.getTotalWallets()}`}, (err, data) => {
-        if (data.status == 'fail'){
-           return res.status(HTTPStatus.CONFLICT).json(data); 
+    const wallet = new Wallet();
+     blockIo.get_new_address({'label': `${wallet._id}`}, (err, address) => {
+        if (address.status == 'fail'){
+            return res.status(HTTPStatus.CONFLICT).json(data); 
         }
-        req.user.createWallet(data.data, (err, wallet) => {
-            return res.json(wallet);
-        });
+        wallet.label = address.data.label;
+        wallet.network = address.data.network;
+        wallet.address = address.data.address;
+        wallet.user = req.user;
+        wallet.save();
+        req.user._wallets.push(wallet);
+		req.user.save();
+        return res.json(wallet);
     });
 }
 
 
-const show = async (req, res) => {
-    try {
-        const wallet = await Wallet.findById(req.params.id);
-        return res.status(HTTPStatus.OK).json(wallet.toJSON());
-    } catch (e) {
-        const message = 'Not found wallet';
-        return res.status(HTTPStatus.NOT_FOUND).json(new NotFoundError(message, 'wallet'));
-    }
+const show = (req, res) => {
+    blockIo.get_address_by_label({'label': req.params.id}, (err, wallet) => {
+        if (wallet.status == 'fail'){
+            return res.status(HTTPStatus.CONFLICT).json(wallet); 
+        }
+        return res.status(HTTPStatus.OK).json(wallet.data);
+    });
 }
 
 const update = (req, res) => {
