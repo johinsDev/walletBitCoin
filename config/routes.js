@@ -1,6 +1,7 @@
 import user from '../app/controllers/users';
 import clients from '../app/controllers/clients';
 import wallets from '../app/controllers/wallets';
+import payments from '../app/controllers/payments';
 import haveManyWallets from '../app/middlewares/haveManyWallets'
 import oauth from '../config/token';
 import registerToKen from '../config/registerToKen';
@@ -25,5 +26,10 @@ export default function (app, passport) {
         app.get('wallet/:id', passport.authenticate(['accessToken'], { session: false }), wallets.show);
         app.put('wallet', passport.authenticate(['accessToken'], { session: false }), wallets.update);
         app.get('wallets', passport.authenticate(['accessToken'], { session: false }), wallets.get);
+
+        // PAYMENTS
+        app.post('payment',passport.authenticate(['accessToken'], { session: false }), payments.store);
+        app.get('payment/:id', passport.authenticate(['accessToken'], { session: false }), payments.show);
+        app.get('payments', passport.authenticate(['accessToken'], { session: false }), payments.get);
     });
 }

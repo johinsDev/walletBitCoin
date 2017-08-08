@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
-let mongooseHidden = require('mongoose-hidden')()
 
 const walletSchema = new Schema({
 	network: String,
@@ -16,8 +15,6 @@ const walletSchema = new Schema({
       default: 0,
     }
 });
-
-walletSchema.plugin(mongooseHidden)
 
 walletSchema.methods.toJSON = function(){
 	return {

@@ -26,7 +26,7 @@ const create = (req, res, next) => {
 // Destinatario	2Mzy8Eskyi92F7ByLiT9EvozTxFyvVUgbUS
 // Crypto Txid	b4e8e6ceeff688d5fa79c9a27376091daf4eea49309342f9379a7b8769891a90
 // Monto	0 BTC
-// Costo	0.00097053 BTC
+// Costo	0.00097053 BTC  
 // Total	0.01 BTC
 // Estado	Completado
 // revisar tabla comisiones para las transacciones que hace mario
