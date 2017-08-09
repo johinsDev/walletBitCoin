@@ -13,9 +13,17 @@ const PaymentSchema = new Schema(
 			unique: true,
 			required: [true, 'txid is required!'],
 		},
+        original_amount: {
+			type: Number,
+			required: [true, 'original_amount is required!'],
+		},
 		amount_withdrawn: {
 			type: Number,
 			required: [true, 'amount_withdrawn is required!'],
+		},
+        fee_fenix: {
+			type: Number,
+			required: [true, 'fee_fenix is required!'],
 		},
         amount_sent: {
 			type: Number,
@@ -47,11 +55,20 @@ PaymentSchema.methods.toJSON = function() {
             _id: this._id,
             txid: this.txid,
             amount_sent: this.amount_sent,
-            network_fee: this.network_fee,
-            amount_withdrawn: this.amount_withdrawn,
+            fee: this.network_fee + this.fee_fenix,
+            total: this.amount_withdrawn,
+			amount: this.original_amount,
             status: this.status
         }
     };
   };
+
+PaymentSchema.statics.list = function({ skip = 0, limit = 5, query} = {}) {
+    return this.find(query)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .populate('user');
+};
 
 export default mongoose.model('Payment', PaymentSchema);
