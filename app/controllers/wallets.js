@@ -22,6 +22,7 @@ const create = (req, res, next) => {
 }
 
 const show = (req, res) => {
+    // validate that user ahs this wallet
     blockIo.get_address_by_label({'label': req.params.id}, (err, wallet) => {
         if (err) return res.status(HTTPStatus.CONFLICT).json(wallet); 
         return res.status(HTTPStatus.OK).json(wallet.data);
@@ -32,7 +33,22 @@ const update = (req, res) => {
   
 }
 
-const get = (req, res) => res.json(req.user._wallets);
+const findWallet = (wallet, req) => {
+    for(var i = 0; i < req.user._wallets.length; i++) {
+        if (req.user._wallets[i]._id == wallet.label) {
+            return true;
+        }
+    }
+    return false;
+}
+
+const get = (req, res) => {
+    blockIo.get_my_addresses({}, (err, wallets) => {
+        if (err) return res.status(HTTPStatus.CONFLICT).json(wallets.data);
+        const userWallets = wallets.data.addresses.filter((wallet) => findWallet(wallet, req));
+        return res.status(HTTPStatus.OK).json(userWallets);
+    });
+}
 
 
 module.exports = {
