@@ -18,13 +18,23 @@ const get = async (req, res) => {
       "$group": {
         "_id": {  day: { $dayOfMonth: "$createdAt" }, month: { $month: "$createdAt" }, year: { $year: "$createdAt"} },
         "totalValue": { "$sum": "$amount_withdrawn" },
-        count: { $sum: 1 }
       }
     }
-  ])
-  return res.json(payments)
-  // por billetera traemos --> ultimso 20 ingresos
-  // ultimos 20 pagos
+  ]);
+  let obj = {};
+  obj.stats = payments.reduce(function(acc, cur, i) {
+    acc[i] = cur;
+    return acc;
+  }, {});
+
+  
+  const { from_wallet, to_wallet } = req.params.id;
+  const lastPayments = await Payment.list({limit: 20, query: {from_wallet} });
+  const lastIncomes = await Payment.list({limit: 20, query: {to_wallet} });
+  obj.lastPayments = lastPayments;
+  obj.lastIncomes = lastIncomes;
+
+  return res.json(obj)
 }
 
 module.exports = {
