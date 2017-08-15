@@ -24,7 +24,8 @@ const get = async (req, res) => {
   let obj = {};
   obj.stats = payments;
   
-  const { from_wallet, to_wallet } = req.params.id;
+  const from_wallet = req.params.id;
+  const to_wallet = req.params.id;
   const lastPayments = await Payment.list({limit: 20, query: {from_wallet} });
   const lastIncomes = await Payment.list({limit: 20, query: {to_wallet} });
   obj.lastPayments = lastPayments
