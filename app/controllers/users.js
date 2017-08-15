@@ -26,6 +26,7 @@ const findWallet = (wallet, req) => {
 
 const profile = (req, res) => {
     blockIo.get_my_addresses({}, (err, wallets) => {
+        console.log(wallets.data.addresses)
         if (err) return res.status(HTTPStatus.CONFLICT).json(wallets.data);
         const userWallets = wallets.data.addresses.filter((wallet) => findWallet(wallet, req));
         req.user._wallets = userWallets;

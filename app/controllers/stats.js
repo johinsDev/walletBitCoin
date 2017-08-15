@@ -22,18 +22,14 @@ const get = async (req, res) => {
     }
   ]);
   let obj = {};
-  obj.stats = payments.reduce(function(acc, cur, i) {
-    acc[i] = cur;
-    return acc;
-  }, {});
-
+  obj.stats = payments;
   
   const { from_wallet, to_wallet } = req.params.id;
   const lastPayments = await Payment.list({limit: 20, query: {from_wallet} });
   const lastIncomes = await Payment.list({limit: 20, query: {to_wallet} });
-  obj.lastPayments = lastPayments;
+  obj.lastPayments = lastPayments
+;
   obj.lastIncomes = lastIncomes;
-
   return res.json(obj)
 }
 
