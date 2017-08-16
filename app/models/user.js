@@ -86,7 +86,8 @@ userSchema.methods.toJSON = function() {
 		lastName: this.lastName,
 		avatar: this.avatar,
 		wallets: {data: this.walletsToJSON()},
-		gender: this.gender
+		gender: this.gender,
+		phone: this.phone
 	}
     };
   },
