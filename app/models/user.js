@@ -11,6 +11,11 @@ const encryptPassword =  (password) => {
 	return bcrypt.hashSync(password, bcrypt.genSaltSync(5), null);
 }
 
+const GENDERS = {m: 'masculino', f: 'femenino'};
+
+function getGender (value) {
+	return GENDERS[value];
+}
 const userSchema = new Schema(
 	{
 		name: String,
@@ -26,6 +31,11 @@ const userSchema = new Schema(
 				},
 				message: '{VALUE} is not a valid email!',
 			},
+		},
+		gender: {
+			type: String,
+			enum: ['m', 'f'],
+			get: getGender
 		},
 		username: {
 			type: String,
@@ -75,8 +85,9 @@ userSchema.methods.toJSON = function() {
 		firstName: this.firstName,
 		lastName: this.lastName,
 		avatar: this.avatar,
-		wallets: {data: this.walletsToJSON()}
-	 }
+		wallets: {data: this.walletsToJSON()},
+		gender: this.gender
+	}
     };
   },
 	
