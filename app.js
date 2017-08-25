@@ -13,13 +13,10 @@ const port = process.env.PORT || 8042;
 
 /***************Init Passport********************/
 app.use(passport.initialize());
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.static('public'))
+app.use(bodyParser.json({limit: '50mb'}));
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
-app.use(bodyParser.urlencoded());
-app.use(bodyParser.json());
 
 /***************Mongodb configuratrion********************/
 var mongoose = require('mongoose');

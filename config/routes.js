@@ -8,7 +8,10 @@ import stats from '../app/controllers/stats';
 import haveManyWallets from '../app/middlewares/haveManyWallets'
 import oauth from '../config/token';
 import registerToKen from '../config/registerToKen';
+import multer from 'multer';
 import 'express-namespace';
+
+var upload = multer({ storage: multer.memoryStorage({}) })
 
 export default function (app, passport) {
     app.namespace('/api/v1/',  () => {
@@ -19,7 +22,7 @@ export default function (app, passport) {
         
         // USER PROFILE
         app.get('me', passport.authenticate(['accessToken'], { session: false }), user.profile);
-        app.put('me', passport.authenticate(['accessToken'], { session: false }), user.update);
+        app.put('me', [passport.authenticate(['accessToken'], { session: false }), upload.single('test')], user.update);
 
         // API CLIENTS
         app.post('clients', clients.store);

@@ -3,12 +3,22 @@ import bcrypt from 'bcrypt-nodejs';
 import Wallet from './wallet';
 import validator from 'validator';
 import uniqueValidator from 'mongoose-unique-validator';
+import fs from 'fs'
 
 const Schema = mongoose.Schema;
 let mongooseHidden = require('mongoose-hidden')()
-
+let request;
 const encryptPassword =  (password) => {
 	return bcrypt.hashSync(password, bcrypt.genSaltSync(5), null);
+}
+
+const uploadImage = function (avatar) {
+	avatar = avatar.replace(/^data:image\/\w+;base64,/, "");
+    avatar  = avatar.replace(/ /g, '+');
+    var buff = new Buffer(avatar, 'base64');
+	
+    fs.writeFileSync(`public/uploads/${this.username}.png`, buff);
+	return `${request.protocol}://${request.headers.host}/uploads/${this.username}.png`;
 }
 
 const GENDERS = {m: 'masculino', f: 'femenino'};
@@ -45,7 +55,7 @@ const userSchema = new Schema(
 		},
 		password: { type: String, set: encryptPassword, hideJSON: true },
 		phone: String,
-		avatar: String,
+		avatar: { type: String, set: uploadImage } ,
 		_wallets : [{ type: Schema.Types.ObjectId, ref: 'Wallet' }]
 	},
 	{ timestamps: true },
@@ -62,6 +72,7 @@ userSchema.methods.validPassword = function(password) {
 };
 
 userSchema.methods.update = function(req) {
+	request = req;
 	Object.keys(req.body).forEach(key => {
 		this[key] = req.body[key];
 	});
